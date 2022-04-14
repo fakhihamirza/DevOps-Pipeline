@@ -1,0 +1,36 @@
+Resources:
+  LambdaFunctionRole:
+    Type: "AWS::IAM::Role"
+    Properties:
+      Policies:
+        - PolicyName: LambdaFunctionPolicy
+          PolicyDocument:
+            Version: 2012-10-17
+            Statement:
+              - Action:
+                  - "logs:CreateLogGroup"
+                  - "logs:CreateLogStream"
+                  - "logs:PutLogEvents"
+                Resource:
+                  - "arn:aws:logs:::*"
+                Effect: Allow
+      AssumeRolePolicyDocument:
+        Version: 2012-10-17
+        Statement:
+          - Action:
+              - "sts:AssumeRole"
+            Effect: Allow
+            Principal:
+              Service:
+                - lambda.amazonaws.com
+  LambdaFunction:
+    Type: "AWS::Lambda::Function"
+    Properties:
+      Role: !GetAtt LambdaFunctionRole.Arn
+      Runtime: "nodejs14.x"
+      Handler: index.handler
+      Code:
+        ZipFile: |
+          exports.handler = async function(event) {
+            console.log("Hello Queen hehe!")
+          }
