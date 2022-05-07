@@ -3,5 +3,6 @@ version: 0.2
 phases:
   build:
     commands:
+    #can be anyhing
       - npm i
       - sam package --template-file template.yaml --s3-bucket $S3_BUCKET_NAME --output-template-file packagedTemplate.yaml
