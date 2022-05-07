@@ -1,9 +1,11 @@
+AWSTemplateFormatVersion: "2010-09-09"
+Transform: "AWS::Serverless-2016-10-31"
 Resources:
-  LambdaFunctionRole:
+  CICDLambdaFunctionRole:
     Type: "AWS::IAM::Role"
     Properties:
       Policies:
-        - PolicyName: LambdaFunctionPolicy
+        - PolicyName: CICDLambdaFunctionPolicy
           PolicyDocument:
             Version: 2012-10-17
             Statement:
@@ -12,7 +14,7 @@ Resources:
                   - "logs:CreateLogStream"
                   - "logs:PutLogEvents"
                 Resource:
-                  - "arn:aws:logs:::*"
+                  - "arn:aws:logs:*:*:*"
                 Effect: Allow
       AssumeRolePolicyDocument:
         Version: 2012-10-17
@@ -23,14 +25,10 @@ Resources:
             Principal:
               Service:
                 - lambda.amazonaws.com
-  LambdaFunction:
-    Type: "AWS::Lambda::Function"
+  CICDLambdaFunction:
+    Type: "AWS::Serverless::Function"
     Properties:
-      Role: !GetAtt LambdaFunctionRole.Arn
+      Role: !GetAtt CICDLambdaFunctionRole.Arn
       Runtime: "nodejs14.x"
       Handler: index.handler
-      Code:
-        ZipFile: |
-          exports.handler = async function(event) {
-            console.log("Hello Queen hehe!")
-          }
+      CodeUri: .
